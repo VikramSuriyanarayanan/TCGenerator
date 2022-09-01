@@ -2,7 +2,6 @@ import mysql.connector
 import pandas as pd
 from mysql.connector import errorcode
 
-
 # This script will help to build a transfer certificate database for a school.
 
 DB_NAME = "student"
@@ -70,21 +69,22 @@ def create_table(cursor):
     """
 
 
-def set_student_tc_info(student_info, cursor):
+def set_student_tc_info(student_info, cursor, cnx):
     """This function will help to set the complete details about a student's
     Transfer in an institution.
     """
-
     add_student = ("INSERT INTO transfer_certificate "
                    "(name, id, conduct) "
-                   "VALUES (%s, %s, %s")
-    try:
-        print("Inserting data into 'transfer_certificate' table.")
-        cursor.execute(add_student, student_info)
-    except mysql.connector.Error as err:
-        print("Insertion of data into 'transfer_certificate' table failed, quitting.")
-        print(err.msg)
-        exit(1)
+                   "VALUES (%s, %s, %s)")
+    for student in input_df.itertuples():
+        try:
+            print("Inserting data into 'transfer_certificate' table.")
+            cursor.execute(add_student, (student.name, student.id, student.conduct))
+            cnx.commit()
+        except mysql.connector.Error as err:
+            print("Insertion of data into 'transfer_certificate' table failed, quitting.")
+            print(err.msg)
+            exit(1)
 
 
 def get_config_credentials():
@@ -113,19 +113,32 @@ def create_cursor(cnx):
     return cursor
 
 
-def close_connection(cnx):
+def close_connection(cursor, cnx):
+    cursor.close()
     cnx.close()
 
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
+    # Get configuration details and setup connection.
     configuration = get_config_credentials()
     connection = create_connection(configuration)
     crs = create_cursor(connection)
+
+    # Create Database and Tables.
     create_database(crs)
     configuration['database'] = DB_NAME
     crs = create_cursor(connection)
     create_table(crs)
-    close_connection(connection)
+
+    # Read input file using pandas dataframe
+    input_data = pd.read_csv(r'input', names=["name", "id", "conduct"])
+    input_df = pd.DataFrame(input_data)
+
+    # Populate the database with the given input.
+    set_student_tc_info(input_df, crs, connection)
+
+    # Close connection.
+    close_connection(crs, connection)
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/

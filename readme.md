@@ -1,10 +1,10 @@
-<h5> What is this project about? </h5>
+<h4> What is this project about? </h4>
 
 This project will help with updating and fetching Tranfer certificate
 details from mysql db. 
 
-<h5> Backend information: </h5>
-
+<h4> Backend information: </h4>
+<body>
 Ensure you install the required dependencies:
 
 ```
@@ -27,5 +27,13 @@ CREATE TABLE transfer_certificate
   PRIMARY KEY     (id)                                  # Make the id the primary key
 ); 
 ```
-<h5> Important Links: </h5>
+</body>
+<h4> How to run it in local? </h4>
+
+- Install the needed dependencies as mentioned above.
+- Download the input file to same location where `main.py` is downloaded
+- Run the following command `python main.py`
+
+
+<h4> Important Links: </h4>
 - [MySQL Getting started] (https://dev.mysql.com/doc/mysql-getting-started/en/#mysql-getting-started-installing).
