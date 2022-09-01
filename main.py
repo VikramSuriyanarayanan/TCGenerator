@@ -1,7 +1,9 @@
 import mysql.connector
+import pandas as pd
 from mysql.connector import errorcode
 
-# This script will help to build a transfer certificate database for a school. 
+
+# This script will help to build a transfer certificate database for a school.
 
 DB_NAME = "student"
 TABLES = {'transfer_certificate': (
