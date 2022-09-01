@@ -63,7 +63,8 @@ def create_table(cursor):
         else:
             print("Table created successfully.")
 
-    # def get_student_tc_info(name):
+
+def get_student_tc_info(name):
     """This function will help to get the complete details about a student's
     Transfer from an institution.
     """
@@ -76,15 +77,24 @@ def set_student_tc_info(student_info, cursor, cnx):
     add_student = ("INSERT INTO transfer_certificate "
                    "(name, id, conduct) "
                    "VALUES (%s, %s, %s)")
+
+    print("Inserting data into 'transfer_certificate' table:")
+
     for student in input_df.itertuples():
         try:
-            print("Inserting data into 'transfer_certificate' table.")
             cursor.execute(add_student, (student.name, student.id, student.conduct))
             cnx.commit()
         except mysql.connector.Error as err:
-            print("Insertion of data into 'transfer_certificate' table failed, quitting.")
-            print(err.msg)
-            exit(1)
+            if err.errno == errorcode.ER_DUP_ENTRY:
+                print("Input data already exists in table. Exit without re-inserting. Delete all the entries before "
+                      "retrying.")
+                exit(0)
+            else:
+                print("Insertion of data into 'transfer_certificate' table failed, quitting.")
+                print(err.msg)
+                exit(1)
+        else:
+            print("{} Record inserted successfully.".format(student.name))
 
 
 def get_config_credentials():
@@ -137,6 +147,15 @@ if __name__ == '__main__':
 
     # Populate the database with the given input.
     set_student_tc_info(input_df, crs, connection)
+
+    # Get a specific student's record by passing their name
+    get_student_tc_info("Harshini")
+
+    # Update a specific student's record
+    #update_student_tc_info("Harshini")
+
+    # Get total no of students in database
+    #get_total_student_tc_info();
 
     # Close connection.
     close_connection(crs, connection)
