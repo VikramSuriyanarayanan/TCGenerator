@@ -33,7 +33,9 @@ CREATE TABLE transfer_certificate
 - Install the needed dependencies as mentioned above.
 - Download the input file to same location where `main.py` is downloaded
 - Run the following command `python main.py`
+- Sample output should look something like ![this]( https://github.com/VikramSuriyanarayanan/TCGenerator/blob/0c022b7d3bc5bf8389168a9f97f6caae83cca7e6/sample%20output%20of%20table.png)
 
 
 <h4> Important Links: </h4>
-- [MySQL Getting started] (https://dev.mysql.com/doc/mysql-getting-started/en/#mysql-getting-started-installing).
+
+- For getting started with mysql : [MySQL Getting started](https://dev.mysql.com/doc/mysql-getting-started/en/#mysql-getting-started-installing).
