@@ -20,6 +20,13 @@ TABLES = {'transfer_certificate': (
 
 
 def create_database(cursor):
+    """
+    This function will help to create a mysql database
+
+    param cursor: Mysql cursor with the connection information.
+    return: none
+    """
+
     try:
         print("Creating Database '{}': ".format(DB_NAME), end='')
         cursor.execute(
@@ -51,6 +58,7 @@ def create_table(cursor):
     param config: MySql config credentials needed for creating tables.
     :return: none
     """
+
     for table_name in TABLES:
         table_description = TABLES[table_name]
         try:
@@ -69,9 +77,12 @@ def create_table(cursor):
 
 
 def get_student_tc_info(name, cursor):
-    """This function will help to get the complete details about a student's
+    """This function will help to get&print the complete details about a student's
     Transfer from an institution.
+
+    :return: name, idval, conduct
     """
+
     print("Querying table 'transfer_certificate' for specific student {}: ".format(name), end='')
 
     query = ("SELECT name, id, conduct FROM transfer_certificate "
@@ -83,13 +94,16 @@ def get_student_tc_info(name, cursor):
         print("{} has id number of {} and her conduct is {}".format(
             name, idval, conduct))
 
-    return
+    return name, idval, conduct
 
 
 def set_student_tc_info(student_info, cursor, cnx):
     """This function will help to set the complete details about a student's
     Transfer in an institution.
+
+    :return: none
     """
+
     add_student = ("INSERT INTO transfer_certificate "
                    "(name, id, conduct) "
                    "VALUES (%s, %s, %s)")
@@ -117,7 +131,10 @@ def set_student_tc_info(student_info, cursor, cnx):
 def update_student_tc_conduct(name, conduct, cursor, cnx):
     """This function will help to update the student conduct
     in an institution.
+
+    :return: none
     """
+
     update_student = ("UPDATE transfer_certificate "
                       " set conduct = %s"
                       "where name = %s")
@@ -140,7 +157,10 @@ def update_student_tc_conduct(name, conduct, cursor, cnx):
 def get_total_student_tc_info(cursor):
     """This function will help to get total number of students in
     the institution.
+
+    :return: Total student count.
     """
+
     print("Querying table 'transfer_certificate' for total students count : ", end='')
 
     query = "SELECT count(*) FROM transfer_certificate"
@@ -151,14 +171,40 @@ def get_total_student_tc_info(cursor):
         print("This school has {} students".format(
             str(count).split(',')[0].split('(')[1]))
 
+    return count
+
+
+def delete_student_tc_info_by_id(idval, cursor, cnx):
+    """This function will help to delete a student info by id from
+    the institution.
+
+    :return: none
+    """
+
+    print("Deleting an entry from table 'transfer_certificate' for students id : ".format(id), end='')
+
+    query = "DELETE FROM transfer_certificate WHERE id = %s"
+
+    try:
+        cursor.execute(query, (idval,))
+        cnx.commit()
+    except mysql.connector.Error as err:
+        print("Deleting data in 'transfer_certificate' table failed, quitting.")
+        print(err.msg)
+        exit(1)
+    else:
+        print("Student id {} deleted successfully from table 'transfer_certificate'".format(idval), end='')
+
     return
 
 
 def get_config_credentials():
     """
     This function will help with creating config credentials for connecting with mysql.
+
     :return: jdbc connection config information.
     """
+
     config = {
         'user': 'root',
         'password': 'Root@123',
@@ -171,16 +217,37 @@ def get_config_credentials():
 
 
 def create_connection(config):
+    """
+    Create connection between python process and MySQL table using the config details provided via param.
+
+    param config: MySQL database, username, password, host details.
+    return: MySQLConnection pooling.
+    """
+
     cnx = mysql.connector.connect(**config)
     return cnx
 
 
 def create_cursor(cnx):
+    """
+    Creates a connection cursor that can help with dynamic querying in python.
+
+    param cnx: MySQLConnection pooling
+    return: MySQL Cursor.
+    """
     cursor = cnx.cursor()
     return cursor
 
 
 def close_connection(cursor, cnx):
+    """
+    Closes connection strings, cursor before exiting the program.
+
+    param cursor: MySQL Cursor
+    param cnx: MySQLConnection pooling
+    return: none
+    """
+
     cursor.close()
     cnx.close()
     return
@@ -214,6 +281,9 @@ if __name__ == '__main__':
 
     # Get total no of students in database
     get_total_student_tc_info(crs)
+
+    # Delete student information by id
+    delete_student_tc_info_by_id(5, crs, connection)
 
     # Close connection.
     close_connection(crs, connection)
