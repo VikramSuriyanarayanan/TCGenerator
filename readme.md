@@ -33,7 +33,7 @@ CREATE TABLE transfer_certificate
 - Install the needed dependencies as mentioned above.
 - Download the input file to same location where `main.py` is downloaded
 - Run the following command `python main.py`
-- Sample table output should look something like ![this]( https://github.com/VikramSuriyanarayanan/TCGenerator/blob/0c022b7d3bc5bf8389168a9f97f6caae83cca7e6/sample%20output%20of%20table.png)
+- Sample table output should look something like ![this]( https://github.com/VikramSuriyanarayanan/TCGenerator/blob/6e00f0620ed0d50a2d14e881f2465c129e571252/sample_table_output.png)
 - Sample python output should look something like ![this](https://github.com/VikramSuriyanarayanan/TCGenerator/blob/98a646cc3b5f637f012fe1e68eb8b4585ed61608/sample_python_output.png)
 
 
