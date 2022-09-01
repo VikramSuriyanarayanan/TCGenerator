@@ -1,6 +1,6 @@
 <h4> What is this project about? </h4>
 
-This project will help with updating and fetching Tranfer certificate
+This project will help with updating and fetching Transfer certificate
 details from mysql db. 
 
 <h4> Backend information: </h4>

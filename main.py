@@ -40,6 +40,8 @@ def create_database(cursor):
         print(err)
         exit(1)
 
+    return
+
 
 def create_table(cursor):
     """
@@ -63,7 +65,7 @@ def create_table(cursor):
         else:
             print("Table created successfully.")
 
-        return
+    return
 
 
 def get_student_tc_info(name, cursor):
@@ -80,6 +82,7 @@ def get_student_tc_info(name, cursor):
     for (name, idval, conduct) in cursor:
         print("{} has id number of {} and her conduct is {}".format(
             name, idval, conduct))
+
     return
 
 
@@ -93,7 +96,7 @@ def set_student_tc_info(student_info, cursor, cnx):
 
     print("Inserting data into 'transfer_certificate' table:")
 
-    for student in input_df.itertuples():
+    for student in student_info.itertuples():
         try:
             cursor.execute(add_student, (student.name, student.id, student.conduct))
             cnx.commit()
@@ -108,7 +111,7 @@ def set_student_tc_info(student_info, cursor, cnx):
         else:
             print("{} Record inserted successfully.".format(student.name))
 
-        return
+    return
 
 
 def update_student_tc_conduct(name, conduct, cursor, cnx):
@@ -125,13 +128,13 @@ def update_student_tc_conduct(name, conduct, cursor, cnx):
         cursor.execute(update_student, (conduct, name))
         cnx.commit()
     except mysql.connector.Error as err:
-        print("Updation of data into 'transfer_certificate' table failed, quitting.")
+        print("Updating data into 'transfer_certificate' table failed, quitting.")
         print(err.msg)
         exit(1)
     else:
-        print("{}'s conduct Record updated successfully to {}".format(name,conduct))
+        print("{}'s conduct Record updated successfully to {}".format(name, conduct))
 
-        return
+    return
 
 
 def get_total_student_tc_info(cursor):
@@ -147,6 +150,7 @@ def get_total_student_tc_info(cursor):
     for (count) in cursor:
         print("This school has {} students".format(
             str(count).split(',')[0].split('(')[1]))
+
     return
 
 
@@ -179,6 +183,7 @@ def create_cursor(cnx):
 def close_connection(cursor, cnx):
     cursor.close()
     cnx.close()
+    return
 
 
 # Press the green button in the gutter to run the script.
@@ -208,7 +213,7 @@ if __name__ == '__main__':
     update_student_tc_conduct("Ishika", "poor", crs, connection)
 
     # Get total no of students in database
-    get_total_student_tc_info(crs);
+    get_total_student_tc_info(crs)
 
     # Close connection.
     close_connection(crs, connection)
