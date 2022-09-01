@@ -63,11 +63,24 @@ def create_table(cursor):
         else:
             print("Table created successfully.")
 
+        return
 
-def get_student_tc_info(name):
+
+def get_student_tc_info(name, cursor):
     """This function will help to get the complete details about a student's
     Transfer from an institution.
     """
+    print("Querying table 'transfer_certificate' for specific student {}: ".format(name), end='')
+
+    query = ("SELECT name, id, conduct FROM transfer_certificate "
+             "WHERE name = %s")
+
+    cursor.execute(query, (name,))
+
+    for (name, idval, conduct) in cursor:
+        print("{} has id number of {} and her conduct is {}".format(
+            name, idval, conduct))
+    return
 
 
 def set_student_tc_info(student_info, cursor, cnx):
@@ -88,13 +101,53 @@ def set_student_tc_info(student_info, cursor, cnx):
             if err.errno == errorcode.ER_DUP_ENTRY:
                 print("Input data already exists in table. Exit without re-inserting. Delete all the entries before "
                       "retrying.")
-                exit(0)
             else:
                 print("Insertion of data into 'transfer_certificate' table failed, quitting.")
                 print(err.msg)
                 exit(1)
         else:
             print("{} Record inserted successfully.".format(student.name))
+
+        return
+
+
+def update_student_tc_conduct(name, conduct, cursor, cnx):
+    """This function will help to update the student conduct
+    in an institution.
+    """
+    update_student = ("UPDATE transfer_certificate "
+                      " set conduct = %s"
+                      "where name = %s")
+
+    print("Updating conduct data into 'transfer_certificate' table for {}:".format(name))
+
+    try:
+        cursor.execute(update_student, (conduct, name))
+        cnx.commit()
+    except mysql.connector.Error as err:
+        print("Updation of data into 'transfer_certificate' table failed, quitting.")
+        print(err.msg)
+        exit(1)
+    else:
+        print("{}'s conduct Record updated successfully to {}".format(name,conduct))
+
+        return
+
+
+def get_total_student_tc_info(cursor):
+    """This function will help to get total number of students in
+    the institution.
+    """
+    print("Querying table 'transfer_certificate' for total students count : ", end='')
+
+    query = "SELECT count(*) FROM transfer_certificate"
+
+    cursor.execute(query)
+
+    for (count) in cursor:
+        print("This school has {} students".format(
+            str(count).split(',')[0].split('(')[1]))
+    return
 
 
 def get_config_credentials():
@@ -149,13 +202,13 @@ if __name__ == '__main__':
     set_student_tc_info(input_df, crs, connection)
 
     # Get a specific student's record by passing their name
-    get_student_tc_info("Harshini")
+    get_student_tc_info("Harshini", crs)
 
     # Update a specific student's record
-    #update_student_tc_info("Harshini")
+    update_student_tc_conduct("Ishika", "poor", crs, connection)
 
     # Get total no of students in database
-    #get_total_student_tc_info();
+    get_total_student_tc_info(crs);
 
     # Close connection.
     close_connection(crs, connection)
