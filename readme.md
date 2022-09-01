@@ -40,3 +40,5 @@ CREATE TABLE transfer_certificate
 <h4> Important Links: </h4>
 
 - For getting started with mysql : [MySQL Getting started](https://dev.mysql.com/doc/mysql-getting-started/en/#mysql-getting-started-installing).
+- Ensure you have pip installed in windows/mac [Pip installer](https://www.geeksforgeeks.org/how-to-install-pip-on-windows/)
+- Download pycharm community edition if needed [Pycharm Installer for Windows](https://www.jetbrains.com/pycharm/download/#section=windows)
